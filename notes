@@ -1,1 +1,22 @@
 1- docker-compose up -d --build
+
+2- app/console --version
+
+# if not using web server
+3- symfony server:start -d
+4- symfony server:stop
+
+# create entity
+5- php bin/console make:entity Quote
+
+6- php bin/console make:migration
+7- bin/console doctrine:migrations:migrate
+
+# clear cache
+8- bin/console cache:warmup
+
+9- docker-compose exec database bin/bash
+
+10-console make:fixture QuoteFixture
+11-console doctrine:fixtures:load
+12- console make:controller QuoteController
