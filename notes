@@ -17,6 +17,11 @@
 
 9- docker-compose exec database bin/bash
 
-10-console make:fixture QuoteFixture
-11-console doctrine:fixtures:load
+10- console make:fixture QuoteFixture
+11- console doctrine:fixtures:load
 12- console make:controller QuoteController
+
+
+13- composer require symfony/form
+
+14- php bin/console make:form MovieFormType Movie
