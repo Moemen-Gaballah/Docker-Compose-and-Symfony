@@ -6,29 +6,37 @@ use App\Repository\MovieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
 class Movie
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: "integer")]
+    private $id;
 
-    #[ORM\Column(length: 255)]
-    private ?string $title = null;
+    #[ORM\Column(type: "string", length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3)]
+    private $title;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $releaseYear = null;
+    #[ORM\Column(type: "integer")]
+    #[Assert\NotBlank]
+    private $releaseYear;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $description = null;
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    #[Assert\NotBlank]
+    private $description;
 
-    #[ORM\Column(length: 255)]
-    private ?string $imagePath = null;
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    private $imagePath;
 
-    #[ORM\ManyToMany(targetEntity: Actor::class, mappedBy: 'movies')]
-    private Collection $actors;
+    #[ORM\ManyToMany(targetEntity: Actor::class, inversedBy: "movies")]
+    private $actors;
+
+    #[ORM\Column(type: "integer", nullable: true)]
+    private $userId;
 
     public function __construct()
     {
@@ -45,7 +53,7 @@ class Movie
         return $this->title;
     }
 
-    public function setTitle(string $title): static
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
 
@@ -57,7 +65,7 @@ class Movie
         return $this->releaseYear;
     }
 
-    public function setReleaseYear(?int $releaseYear): static
+    public function setReleaseYear(?int $releaseYear): self
     {
         $this->releaseYear = $releaseYear;
 
@@ -69,7 +77,7 @@ class Movie
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
@@ -81,7 +89,7 @@ class Movie
         return $this->imagePath;
     }
 
-    public function setImagePath(string $imagePath): static
+    public function setImagePath(?string $imagePath): self
     {
         $this->imagePath = $imagePath;
 
@@ -89,28 +97,37 @@ class Movie
     }
 
     /**
-     * @return Collection<int, Actor>
+     * @return Collection|Actor[]
      */
     public function getActors(): Collection
     {
         return $this->actors;
     }
 
-    public function addActor(Actor $actor): static
+    public function addActor(Actor $actor): self
     {
         if (!$this->actors->contains($actor)) {
-            $this->actors->add($actor);
-            $actor->addMovie($this);
+            $this->actors[] = $actor;
         }
 
         return $this;
     }
 
-    public function removeActor(Actor $actor): static
+    public function removeActor(Actor $actor): self
     {
-        if ($this->actors->removeElement($actor)) {
-            $actor->removeMovie($this);
-        }
+        $this->actors->removeElement($actor);
+
+        return $this;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(int $userId): self
+    {
+        $this->userId = $userId;
 
         return $this;
     }

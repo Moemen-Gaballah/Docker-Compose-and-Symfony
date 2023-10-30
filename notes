@@ -10,7 +10,7 @@
 5- php bin/console make:entity Quote
 
 6- php bin/console make:migration
-7- bin/console doctrine:migrations:migrate
+7- php bin/console doctrine:migrations:migrate
 
 # clear cache
 8- bin/console cache:warmup
@@ -18,10 +18,22 @@
 9- docker-compose exec database bin/bash
 
 10- console make:fixture QuoteFixture
-11- console doctrine:fixtures:load
+11- php bin/console doctrine:fixtures:load
 12- console make:controller QuoteController
 
 
 13- composer require symfony/form
 
 14- php bin/console make:form MovieFormType Movie
+
+15- composer require symfony/validator doctrine/annotations
+
+# login && register
+16- composer require symfony/security-bundle
+
+17- symfony console make:user User
+- php bin/console make:user User
+
+18- php bin/console make:registration-form
+
+19- php bin/console make:auth
